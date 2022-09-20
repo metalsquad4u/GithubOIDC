@@ -11,12 +11,12 @@ const audience = 'sts.amazonaws.com'
 
 new GithubOidcStack(app, 'GithubOidcStack', {
   projectname,
-  allowedBranchPatternToPush: ['repo:metalsquad4u/GithubOIDC:refs:refs/heads/master'],
+  allowedBranchPatternToPush: ['repo:metalsquad4u/GithubOIDC:ref:refs/heads/main'],
   audience,
 
   env:{
     region: 'us-east-1',
-    //account: '683578897984',
+    account: '683578897984',
   }
 
 
