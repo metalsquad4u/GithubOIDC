@@ -5,6 +5,7 @@ import { Stack, StackProps } from 'aws-cdk-lib';
 import { ImagePullPrincipalType } from 'aws-cdk-lib/aws-codebuild';
 import { Construct } from 'constructs';
 import { PolicyStatement, Effect } from 'aws-cdk-lib/aws-iam';
+import { Condition } from 'aws-cdk-lib/aws-stepfunctions';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export interface GithubOidcStackProps extends StackProps {
@@ -26,18 +27,19 @@ export class GithubOidcStack extends Stack {
         clientIds: ['sts.amazonaws.com'],
         thumbprints: ['6938fd4d98bab03faadb97b34396831e3780aea1']
       }
-    );
-
-    const conditions: iam.Conditions = {
-      StringEquals: {
-        'token.actions.githubusercontent.com:aud': audience,
-        'token.actions.githubusercontent.com.sub': allowedBranchPatternToPush,
-      },
-    };
+    );   
 
     const GithubActionsRole = new iam.Role(this, 'GithubActionsRole', {
       assumedBy: new iam.WebIdentityPrincipal(
-        githubOIDCProvider.openIdConnectProviderArn, conditions      
+        githubOIDCProvider.openIdConnectProviderArn, 
+        {
+          StringEquals: {
+          // Only allow tokens issued by aws-actions/configure-aws-credentials
+          "token.actions.githubusercontent.com:aud": audience,
+          // Only allow specified branches to assume this role
+          "token.actions.githubusercontent.com:sub": allowedBranchPatternToPush,
+          },
+        }      
       ),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
