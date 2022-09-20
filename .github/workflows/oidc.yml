@@ -17,7 +17,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: arn:aws:iam::683578897984:role/aws-gh-oidc
-          aws-region: eu-west-1
+          aws-region: us-east-1
       - name: Checkout repo
         uses: actions/checkout@v2
         with:
