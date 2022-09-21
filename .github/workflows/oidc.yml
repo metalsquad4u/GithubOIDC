@@ -5,7 +5,7 @@ on:
       - main
   #workflow_dispatch: {}
 jobs:
-  deploy:
+  aws_cdk:
     name: Deploy CDK stacks to test
     runs-on: ubuntu-latest
     permissions:
