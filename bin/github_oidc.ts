@@ -16,7 +16,7 @@ new GithubOidcStack(app, 'GithubOidcStack', {
 
   env:{
     region: 'us-east-1',
-    account: '683578897984',
+    //account: '683578897984',
   }
 
 
