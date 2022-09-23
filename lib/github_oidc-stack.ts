@@ -79,8 +79,8 @@ export class GithubOidcStack extends Stack {
         }      
       ),
       managedPolicies: [
-        //iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
-        OIDCPolicy,
+        iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
+        //OIDCPolicy,
       ],
       roleName: 'aws-gh-oidc',
       description: `Role to assume from github actions pipeline of ${projectname}`,
@@ -90,13 +90,13 @@ export class GithubOidcStack extends Stack {
     //GithubActionsRole.addToPolicy(bucketPolicy);
     //GithubActionsRole.node.addDependency(bucketPolicy);
     GithubActionsRole.node.addDependency(githubOIDCProvider);
-    /*
+    
     const s3Bucket = new s3.Bucket(this, 'my-bucket', {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       //encryption: s3.BucketEncryption.KMS,
       // 👇 encrypt with our KMS key
      //encryptionKey: key,
     });
-    */
+    
   }   
 }
