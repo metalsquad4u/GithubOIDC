@@ -3,9 +3,8 @@ on:
   #push:
     #branches:
       #- main
-  workflow_dispatch: {}
-    branches:
-      - main
+  workflow_dispatch:
+
 jobs:
   deploy:
     name: Deploy CDK stacks to test
