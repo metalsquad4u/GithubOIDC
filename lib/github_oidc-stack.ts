@@ -43,7 +43,7 @@ export class GithubOidcStack extends Stack {
           's3:DeleteObject',
           's3:DeleteObjectVersion',
           's3:ListBucket',
-          'codedeploy:*'
+          'cloudformation:DescribeStack*'
           ],
           
           resources: ['*'], 
@@ -51,7 +51,7 @@ export class GithubOidcStack extends Stack {
       ],
     });
     cdk.Aspects.of(OIDCPolicy).add(new cdk.Tag('Application', 'OIDCPermission'));
-    
+    /*
     const bucketPolicy = new iam.PolicyStatement({
       actions: [
         's3:CreateBucket',
@@ -60,12 +60,12 @@ export class GithubOidcStack extends Stack {
         's3:DeleteObject',
         's3:DeleteObjectVersion',
         's3:ListBucket',
-        'codedeploy:*'
+        'cloudformation:DescribeStack*'
       ],
       effect: Effect.ALLOW,
       resources: ['*'],
     });
-    
+    */
     const GithubActionsRole = new iam.Role(this, 'GithubActionsRole', {
       assumedBy: new iam.WebIdentityPrincipal(
         githubOIDCProvider.openIdConnectProviderArn, 
@@ -79,8 +79,8 @@ export class GithubOidcStack extends Stack {
         }      
       ),
       managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
-        //OIDCPolicy,
+        //iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
+        OIDCPolicy,
       ],
       roleName: 'aws-gh-oidc',
       description: `Role to assume from github actions pipeline of ${projectname}`,
