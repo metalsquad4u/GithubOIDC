@@ -29,6 +29,29 @@ export class GithubOidcStack extends Stack {
       }
     );  
     
+    const OIDCPolicy = new iam.ManagedPolicy(this, 'OIDCPolicy', {
+      description: 'Custom Policy to Grant Github Permission to Use Deploy.',
+      managedPolicyName: 'OIDCPolicy',
+      statements:[
+        new PolicyStatement({
+          sid: 'OIDCDeployPermissions',
+          effect: Effect.ALLOW,
+          actions: [
+          's3:CreateBucket',
+          's3:DeleteBucket',
+          's3:DeleteBucketPolicy',
+          's3:DeleteObject',
+          's3:DeleteObjectVersion',
+          's3:ListBucket',
+          'codedeploy:*'
+          ],
+          
+          resources: ['*'], 
+        }),           
+      ],
+    });
+    cdk.Aspects.of(OIDCPolicy).add(new cdk.Tag('Application', 'OIDCPermission'));
+    
     const bucketPolicy = new iam.PolicyStatement({
       actions: [
         's3:CreateBucket',
@@ -36,7 +59,8 @@ export class GithubOidcStack extends Stack {
         's3:DeleteBucketPolicy',
         's3:DeleteObject',
         's3:DeleteObjectVersion',
-        's3:ListBucket'
+        's3:ListBucket',
+        'codedeploy:*'
       ],
       effect: Effect.ALLOW,
       resources: ['*'],
@@ -45,7 +69,7 @@ export class GithubOidcStack extends Stack {
     const GithubActionsRole = new iam.Role(this, 'GithubActionsRole', {
       assumedBy: new iam.WebIdentityPrincipal(
         githubOIDCProvider.openIdConnectProviderArn, 
-        {
+        {          
           StringEquals: {
           // Only allow tokens issued by aws-actions/configure-aws-credentials
           "token.actions.githubusercontent.com:aud": audience,
@@ -54,15 +78,16 @@ export class GithubOidcStack extends Stack {
           },
         }      
       ),
-      /*managedPolicies: [
-        iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
-      ],*/
+      managedPolicies: [
+        //iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
+        OIDCPolicy,
+      ],
       roleName: 'aws-gh-oidc',
       description: `Role to assume from github actions pipeline of ${projectname}`,
       maxSessionDuration: cdk.Duration.hours(1),
     });
 
-    GithubActionsRole.addToPolicy(bucketPolicy);
+    //GithubActionsRole.addToPolicy(bucketPolicy);
     //GithubActionsRole.node.addDependency(bucketPolicy);
     GithubActionsRole.node.addDependency(githubOIDCProvider);
     /*
