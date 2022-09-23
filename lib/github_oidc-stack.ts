@@ -43,7 +43,8 @@ export class GithubOidcStack extends Stack {
           's3:DeleteObject',
           's3:DeleteObjectVersion',
           's3:ListBucket',
-          'cloudformation:DescribeStack*'
+          'cloudformation:DescribeStack*',
+          'ssm:GetParameter*'
           ],
           
           resources: ['*'], 
