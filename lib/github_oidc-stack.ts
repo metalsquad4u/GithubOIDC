@@ -44,15 +44,18 @@ export class GithubOidcStack extends Stack {
           's3:DeleteObjectVersion',
           's3:ListBucket',
           'cloudformation:DescribeStack*',
-          'ssm:GetParameter*'
+          'ssm:GetParameter*',
+          'iam:PassRole'
           ],
           
-          resources: ['*'], 
+          resources: [
+            '*'
+          ], 
         }),           
       ],
     });
     cdk.Aspects.of(OIDCPolicy).add(new cdk.Tag('Application', 'OIDCPermission'));
-    /*
+    
     const bucketPolicy = new iam.PolicyStatement({
       actions: [
         's3:CreateBucket',
@@ -66,7 +69,7 @@ export class GithubOidcStack extends Stack {
       effect: Effect.ALLOW,
       resources: ['*'],
     });
-    */
+    
     const GithubActionsRole = new iam.Role(this, 'GithubActionsRole', {
       assumedBy: new iam.WebIdentityPrincipal(
         githubOIDCProvider.openIdConnectProviderArn, 
@@ -91,13 +94,13 @@ export class GithubOidcStack extends Stack {
     //GithubActionsRole.addToPolicy(bucketPolicy);
     //GithubActionsRole.node.addDependency(bucketPolicy);
     GithubActionsRole.node.addDependency(githubOIDCProvider);
-    
+    /*
     const s3Bucket = new s3.Bucket(this, 'my-bucket', {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       //encryption: s3.BucketEncryption.KMS,
       // 👇 encrypt with our KMS key
      //encryptionKey: key,
     });
-    
+    */
   }   
 }
