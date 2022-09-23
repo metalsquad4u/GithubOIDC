@@ -1,9 +1,11 @@
 name: deploy-test
 on:
-  push:
+  #push:
+    #branches:
+      #- main
+  workflow_dispatch: {}
     branches:
-      - main
-  #workflow_dispatch: {}
+        - main
 jobs:
   deploy:
     name: Deploy CDK stacks to test
