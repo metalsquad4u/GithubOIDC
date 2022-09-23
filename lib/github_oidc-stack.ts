@@ -34,6 +34,21 @@ export class GithubOidcStack extends Stack {
       managedPolicyName: 'OIDCPolicy',
       statements:[
         new PolicyStatement({
+          sid: 'AllowToAssumeCDKRoles',
+          effect: Effect.ALLOW,
+          actions: [
+          'sts:AssumeRole',
+          'iam:PassRole',
+          ],          
+          resources: [
+            "arn:aws:iam::*:role/cdk-hnb659fds-cfn-exec-role-*",
+            "arn:aws:iam::*:role/cdk-hnb659fds-deploy-role-*",
+            "arn:aws:iam::*:role/cdk-hnb659fds-file-publishing-role-*",
+            "arn:aws:iam::*:role/cdk-hnb659fds-image-publishing-role-*",
+            "arn:aws:iam::*:role/cdk-hnb659fds-lookup-role-*",
+          ], 
+        }),      
+        new PolicyStatement({
           sid: 'OIDCDeployPermissions',
           effect: Effect.ALLOW,
           actions: [
@@ -46,31 +61,17 @@ export class GithubOidcStack extends Stack {
           'cloudformation:DescribeStack*',
           'ssm:GetParameter*',
           'iam:PassRole'
-          ],
-          
+          ],          
           resources: [
             '*'
           ], 
-        }),           
+        }),      
       ],
+      
     });
     cdk.Aspects.of(OIDCPolicy).add(new cdk.Tag('Application', 'OIDCPermission'));
     
-    const bucketPolicy = new iam.PolicyStatement({
-      actions: [
-        's3:CreateBucket',
-        's3:DeleteBucket',
-        's3:DeleteBucketPolicy',
-        's3:DeleteObject',
-        's3:DeleteObjectVersion',
-        's3:ListBucket',
-        'cloudformation:DescribeStack*'
-      ],
-      effect: Effect.ALLOW,
-      resources: [
-        'arn:aws:iam::***:role/cdk-hnb659fds-deploy-role-***-us-east-1',
-      ],
-    });
+
     
     const GithubActionsRole = new iam.Role(this, 'GithubActionsRole', {
       assumedBy: new iam.WebIdentityPrincipal(
@@ -96,13 +97,13 @@ export class GithubOidcStack extends Stack {
     //GithubActionsRole.addToPolicy(bucketPolicy);
     //GithubActionsRole.node.addDependency(bucketPolicy);
     GithubActionsRole.node.addDependency(githubOIDCProvider);
-    /*
+    /
     const s3Bucket = new s3.Bucket(this, 'my-bucket', {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       //encryption: s3.BucketEncryption.KMS,
       // 👇 encrypt with our KMS key
      //encryptionKey: key,
     });
-    */
+    
   }   
 }
