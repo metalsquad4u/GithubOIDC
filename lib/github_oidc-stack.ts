@@ -67,7 +67,9 @@ export class GithubOidcStack extends Stack {
         'cloudformation:DescribeStack*'
       ],
       effect: Effect.ALLOW,
-      resources: ['*'],
+      resources: [
+        'arn:aws:iam::***:role/cdk-hnb659fds-deploy-role-***-us-east-1',
+      ],
     });
     
     const GithubActionsRole = new iam.Role(this, 'GithubActionsRole', {
