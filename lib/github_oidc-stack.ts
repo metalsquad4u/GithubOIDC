@@ -25,11 +25,23 @@ export class GithubOidcStack extends Stack {
       'GithubActions', {
         url: 'https://token.actions.githubusercontent.com',
         clientIds: ['sts.amazonaws.com'],
-        //thumbprints: ['6938fd4d98bab03faadb97b34396831e3780aea1']
+        thumbprints: ['6938fd4d98bab03faadb97b34396831e3780aea1']
       }
     );  
     
-
+    const bucketPolicy = new iam.PolicyStatement({
+      actions: [
+        's3:CreateBucket',
+        's3:DeleteBucket',
+        's3:DeleteBucketPolicy',
+        's3:DeleteObject',
+        's3:DeleteObjectVersion',
+        's3:ListBucket'
+      ],
+      effect: Effect.ALLOW,
+      resources: ['*'],
+    });
+    
     const GithubActionsRole = new iam.Role(this, 'GithubActionsRole', {
       assumedBy: new iam.WebIdentityPrincipal(
         githubOIDCProvider.openIdConnectProviderArn, 
@@ -42,21 +54,24 @@ export class GithubOidcStack extends Stack {
           },
         }      
       ),
-      managedPolicies: [
+      /*managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('AdministratorAccess'),
-      ],
+      ],*/
       roleName: 'aws-gh-oidc',
       description: `Role to assume from github actions pipeline of ${projectname}`,
       maxSessionDuration: cdk.Duration.hours(1),
     });
 
+    GithubActionsRole.addToPolicy(bucketPolicy);
+    //GithubActionsRole.node.addDependency(bucketPolicy);
+    GithubActionsRole.node.addDependency(githubOIDCProvider);
+    /*
     const s3Bucket = new s3.Bucket(this, 'my-bucket', {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       //encryption: s3.BucketEncryption.KMS,
       // 👇 encrypt with our KMS key
      //encryptionKey: key,
     });
-  } 
-
-  
+    */
+  }   
 }
