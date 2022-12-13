@@ -98,7 +98,7 @@ export class GithubOidcStack extends Stack {
     //GithubActionsRole.node.addDependency(bucketPolicy);
     GithubActionsRole.node.addDependency(githubOIDCProvider);
   
-    const s3Bucket = new s3.Bucket(this, 'my-bucket', {
+    const s3Bucket = new s3.Bucket(this, 'my-bucket-oidc-test', {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       //encryption: s3.BucketEncryption.KMS,
       // 👇 encrypt with our KMS key
@@ -106,4 +106,18 @@ export class GithubOidcStack extends Stack {
     });
     
   }   
+}
+
+export class GithubTestStack extends Stack{
+  
+  constructor(scope: Construct, id: string, props?: StackProps){
+    super(scope, id, props);
+
+    const s3Bucket = new s3.Bucket(this, 'my-bucket-test-stack-2', {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      //encryption: s3.BucketEncryption.KMS,
+      // 👇 encrypt with our KMS key
+     //encryptionKey: key,
+    });
+  }
 }

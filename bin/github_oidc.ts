@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { GithubOidcStack } from '../lib/github_oidc-stack';
+import { GithubOidcStack, GithubTestStack } from '../lib/github_oidc-stack';
 
 const app = new cdk.App();
 
@@ -20,3 +20,10 @@ new GithubOidcStack(app, 'GithubOidcStack', {
   }
 
 });
+
+new GithubTestStack(app, 'TestStack', {
+  stackName: 'TestStack',
+  env: {
+    region: 'us-east-1'
+  }
+})
