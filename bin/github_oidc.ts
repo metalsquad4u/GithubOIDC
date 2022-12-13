@@ -13,7 +13,8 @@ new GithubOidcStack(app, 'GithubOidcStack', {
   projectname,
   allowedBranchPatternToPush: ['repo:metalsquad4u/GithubOIDC:ref:refs/heads/main'],
   audience,
-
+    
+  stackName: 'GithubOidcStack',
   env:{
     region: 'us-east-1',
     //account: '683578897984',

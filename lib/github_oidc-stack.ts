@@ -98,13 +98,12 @@ export class GithubOidcStack extends Stack {
     //GithubActionsRole.node.addDependency(bucketPolicy);
     GithubActionsRole.node.addDependency(githubOIDCProvider);
   
-    const s3Bucket = new s3.Bucket(this, 'my-bucket-oidc-test', {
+    const s3Bucket = new s3.Bucket(this, 'my-bucket', {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       //encryption: s3.BucketEncryption.KMS,
       // 👇 encrypt with our KMS key
      //encryptionKey: key,
     });
-    
   }   
 }
 

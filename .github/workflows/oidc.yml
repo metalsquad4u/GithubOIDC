@@ -1,6 +1,6 @@
 name: deploy-test
 on:
-  push:
+  #push:
     #branches:
       #- main
   workflow_dispatch:
@@ -37,9 +37,9 @@ jobs:
         run: 'sudo npm install -g aws-cdk && sudo npm install -g aws-cdk-lib'
      
       - name: CDK Synth
-        run: cdk synth TestStack
+        run: cdk synth GithubOidcStack #TestStack#
         working-directory: ./
 
       - name: CDK Deploy
-        run: cdk deploy TestStack --require-approval never 
+        run: cdk deploy --require-approval never GithubOidcStack #TestStack#
         working-directory: ./
