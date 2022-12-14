@@ -2,6 +2,8 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { GithubOidcStack } from '../lib/github_oidc-stack';
+import { GithubTestStack } from '../lib/oidc_two-stack';
+
 
 const app = new cdk.App();
 
@@ -14,10 +16,13 @@ new GithubOidcStack(app, 'GithubOidcStack', {
   allowedBranchPatternToPush: ['repo:metalsquad4u/GithubOIDC:ref:refs/heads/main'],
   audience,
     
-  stackName: 'GithubOidcStack',
-  env:{
-    region: 'us-east-1',
-    //account: '683578897984',
-  }
+  stackName: 'GithubOidcStack',  
 
 });
+
+
+new GithubTestStack(app, 'TestStack', {
+  stackName: 'TestStack',
+  
+})
+
