@@ -49,7 +49,7 @@ export class GithubOidcStack extends Stack {
           ], 
         }),      
         new PolicyStatement({
-          sid: 'OIDCDeployPermissions',
+          sid: 'OIDCDeployPermissionsForS3',
           effect: Effect.ALLOW,
           actions: [
           's3:CreateBucket',
@@ -61,6 +61,27 @@ export class GithubOidcStack extends Stack {
           'cloudformation:DescribeStack*',
           'ssm:GetParameter*',
           'iam:PassRole'
+          ],          
+          resources: [
+            '*'
+          ], 
+        }),      
+        new PolicyStatement({
+          sid: 'OIDCDeployPermissionsForKMS',
+          effect: Effect.ALLOW,
+          actions: [
+          'kms:Create*',
+          'kms:Describe*',
+          'kms:Enable*',
+          'kms:List*',
+          'kms:Put*',
+          'kms:Update*',
+          'kms:Revoke*',
+          'kms:Disable*',
+          'kms:Get*',
+          'kms:Delete*',
+          'kms:ScheduleKeyDeletion',
+          'kms:CancelKeyDeletion'
           ],          
           resources: [
             '*'
@@ -97,14 +118,12 @@ export class GithubOidcStack extends Stack {
     //GithubActionsRole.addToPolicy(bucketPolicy);
     //GithubActionsRole.node.addDependency(bucketPolicy);
     GithubActionsRole.node.addDependency(githubOIDCProvider);
-  
+  /*
     const s3Bucket = new s3.Bucket(this, 'my-bucket-rename', {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       //encryption: s3.BucketEncryption.KMS,
       // 👇 encrypt with our KMS key
      //encryptionKey: key,
-    });
+    });*/
   }   
 }
-
-
