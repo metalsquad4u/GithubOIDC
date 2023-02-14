@@ -15,7 +15,8 @@ new GithubOidcStack(app, 'GithubOidcStack', {
   projectname,
   allowedBranchPatternToPush: [
     'repo:metalsquad4u/GithubOIDC:ref:refs/heads/main',
-    'repo:metalsquad4u/DoubleStackOIDC:ref:refs/heads/main'
+    'repo:metalsquad4u/DoubleStackOIDC:ref:refs/heads/main',
+    'repo:metalsquad4u/DeployTest:ref:refs/heads/main'
   ],
   audience,
     
