@@ -14,7 +14,7 @@ jobs:
       contents: read
       id-token: write
 
-    #environment: TEST_ENV
+    environment: TEST_ENV
     
     steps:
       - name: Configure AWS credentials
