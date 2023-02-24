@@ -9,12 +9,13 @@ jobs:
   deploy:
     name: Deploy CDK stacks to test
     runs-on: ubuntu-latest
-    environment: 
-      name: TEST_ENV
     permissions:
       actions: write
       contents: read
       id-token: write
+
+    environment: TEST_ENV
+    
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
